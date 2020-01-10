@@ -1,0 +1,13 @@
+.idea
+.idea/
+__pycache__
+__pycache__/
+agents/__pycache__
+agents/__pycache__/
+.ipynb_checkpoints/__pycache__
+.ipynb_checkpoints/__pycache__/
+app.log
+agents/app.log
+.ipynb_checkpoints/app.log
+*.xlsx
+
