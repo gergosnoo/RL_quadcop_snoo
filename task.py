@@ -30,10 +30,12 @@ class Task():
     def get_reward(self):
         """Uses current pose of sim to return reward."""
         # reward = 1-.1*abs(self.sim.pose[2] - self.target_pos[2])
-        reward = 0
+        reward = -1
 
         if abs(self.sim.pose[2] - self.target_pos[2]) < 5:
             reward = - .04 * pow((self.sim.pose[2] - self.target_pos[2]), 2) + 1
+        if 5 <= abs(self.sim.pose[2] - self.target_pos[2]) < 10:
+            reward = .04 * pow((self.sim.pose[2] - self.target_pos[2])-5, 2) - 1
 
         # if self.target_pos[2]+3 >= self.sim.pose[2] >= self.target_pos[2]-3:
         #     reward += 50
