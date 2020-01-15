@@ -70,8 +70,8 @@ class Actor:
         # net = layers.Dense(units=24, activation='relu')(net)
         # net = layers.Dense(units=16, activation='sigmoid')(net)
         net = layers.Dense(units=64, activation='relu')(net)
-        print(net.get_weights())
-        net = optimizers.SGD(lr=0.01, clipvalue=1.)
+        # print(net.get_weights())
+        # net = optimizers.SGD(lr=0.01, clipvalue=1.)
 
 
         # Try different layer sizes, activations, add batch normalization, regularizers, etc.
@@ -131,23 +131,23 @@ class Critic:
         # Add hidden layer(s) for state pathway
         net_states = layers.Dense(units=32, activation='relu')(states)
         net_states = layers.Dense(units=64, activation='relu')(net_states)
- #       net_states = layers.Dense(units=64, activation='relu')(net_states)
-        print(net_states.get_weights())
-        net_states = optimizers.SGD(lr=0.01, clipvalue=1.)
+        # net_states = layers.Dense(units=64, activation='relu')(net_states)
+        # print(net_states.get_weights())
+        # net_states = optimizers.SGD(lr=0.01, clipvalue=1.)
 
         # Add hidden layer(s) for action pathway
         net_actions = layers.Dense(units=16, activation='relu')(actions)
         net_actions = layers.Dense(units=64, activation='relu')(net_actions)
-        print(net_actions.get_weights())
-        net_actions = optimizers.SGD(lr=0.01, clipvalue=1.)
+        # print(net_actions.get_weights())
+        # net_actions = optimizers.SGD(lr=0.01, clipvalue=1.)
 
         # Try different layer sizes, activations, add batch normalization, regularizers, etc.
 
         # Combine state and action pathways
         net = layers.Add()([net_states, net_actions])
         net = layers.Activation('relu')(net)
-        print(net.get_weights())
-        net = optimizers.SGD(lr=0.01, clipvalue=1.)
+        # print(net.get_weights())
+        # net = optimizers.SGD(lr=0.01, clipvalue=1.)
 
         # Add more layers to the combined network if needed
         # net = layers.Dense(units=4, activation='sigmoid')(net)
