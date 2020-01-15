@@ -30,19 +30,19 @@ class Task():
         """Uses current pose of sim to return reward."""
         #reward = 1.-.35*(abs(self.sim.pose[:3] - self.target_pos)).sum() #.3
 
-        reward = -5*abs(self.sim.pose[2] - self.target_pos[2])
+        reward = -1*abs(self.sim.pose[2] - self.target_pos[2])
 
-        if 8 > abs(self.sim.pose[2] - self.target_pos[2]) >= 6:
-            reward += -80
-
-        if abs(self.sim.pose[2] - self.target_pos[2]) >= 8:
-            reward += -150
+        # if 8 > abs(self.sim.pose[2] - self.target_pos[2]) >= 6:
+        #     reward += -80
+        #
+        # if abs(self.sim.pose[2] - self.target_pos[2]) >= 8:
+        #     reward += -150
 
         if self.target_pos[2]+3 >= self.sim.pose[2] >= self.target_pos[2]-3:
-            reward += 150
+            reward += 10
 
         if self.sim.pose[2] == self.target_pos[2]:
-            reward += 200.0
+            reward += 50.0
 
         return reward
 
@@ -57,7 +57,7 @@ class Task():
         next_state = np.concatenate(pose_all)
 
         if done and self.sim.time < self.sim.runtime:
-            reward -= 100
+            reward = -10
 
         return next_state, reward, done
 

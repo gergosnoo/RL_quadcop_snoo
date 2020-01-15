@@ -99,7 +99,7 @@ class Actor:
         # Incorporate any additional losses here (e.g. from regularizers)
 
         # Define optimizer and training function
-        optimizer = optimizers.Adam()
+        optimizer = optimizers.Adam(learning_rate=0.0001)
         updates_op = optimizer.get_updates(params=self.model.trainable_weights,
                                            loss=loss)
         sgd = optimizers.SGD(lr=0.01, clipnorm=1.)
@@ -175,7 +175,7 @@ class Critic:
         self.model = models.Model(inputs=[states, actions], outputs=Q_values)
 
         # Define optimizer and compile model for training with built-in loss function
-        optimizer = optimizers.Adam()
+        optimizer = optimizers.Adam(learning_rate=0.0001)
         self.model.compile(optimizer=optimizer, loss='mse')
         sgd = optimizers.SGD(lr=0.01, clipnorm=1.)
         self.model.compile(optimizer=sgd, loss='mse')
@@ -217,7 +217,7 @@ class DDPG():
 
         # Noise process
         self.exploration_mu = 0
-        self.exploration_theta = 0.145    # 0.15
+        self.exploration_theta = 0.17    # 0.15
         self.exploration_sigma = 0.2    #0.2
         self.noise = OUNoise(self.action_size, self.exploration_mu,
                              self.exploration_theta, self.exploration_sigma)
