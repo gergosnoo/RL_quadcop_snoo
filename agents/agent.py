@@ -67,12 +67,9 @@ class Actor:
 
         # Add hidden layers
         net = layers.Dense(units=8, activation='relu')(states)
-        # net = layers.Dense(units=24, activation='relu')(net)
-        # net = layers.Dense(units=16, activation='sigmoid')(net)
+        net = layers.BatchNormalization(axis=1)(net)
         net = layers.Dense(units=64, activation='relu')(net)
-        # print(net.get_weights())
-        # net = optimizers.SGD(lr=0.01, clipvalue=1.)
-
+        net = layers.BatchNormalization(axis=1)(net)
 
         # Try different layer sizes, activations, add batch normalization, regularizers, etc.
         # add l2 regularizer
@@ -139,16 +136,16 @@ class Critic:
 
         # Add hidden layer(s) for state pathway
         net_states = layers.Dense(units=32, activation='relu')(states)
+        net_states = layers.BatchNormalization(axis=1)(net_states)
         net_states = layers.Dense(units=64, activation='relu')(net_states)
-        # net_states = layers.Dense(units=64, activation='relu')(net_states)
-        # print(net_states.get_weights())
-        # net_states = optimizers.SGD(lr=0.01, clipvalue=1.)
+        net_states = layers.BatchNormalization(axis=1)(net_states)
+
 
         # Add hidden layer(s) for action pathway
         net_actions = layers.Dense(units=16, activation='relu')(actions)
+        net_actions = layers.BatchNormalization(axis=1)(net_actions)
         net_actions = layers.Dense(units=64, activation='relu')(net_actions)
-        # print(net_actions.get_weights())
-        # net_actions = optimizers.SGD(lr=0.01, clipvalue=1.)
+        net_actions = layers.BatchNormalization(axis=1)(net_actions)
 
         # Try different layer sizes, activations, add batch normalization, regularizers, etc.
         # add l2 regularizer
