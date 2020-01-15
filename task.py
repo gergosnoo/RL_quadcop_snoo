@@ -1,5 +1,6 @@
 import numpy as np
 from physics_sim import PhysicsSim
+from math import pow
 
 class Task():
     """Task (environment) that defines the goal and provides feedback to the agent."""
@@ -28,21 +29,17 @@ class Task():
 
     def get_reward(self):
         """Uses current pose of sim to return reward."""
-        #reward = 1.-.35*(abs(self.sim.pose[:3] - self.target_pos)).sum() #.3
+        # reward = 1-.1*abs(self.sim.pose[2] - self.target_pos[2])
+        reward = 0
 
-        reward = 1-.1*abs(self.sim.pose[2] - self.target_pos[2])
+        if abs(self.sim.pose[2] - self.target_pos[2]) < 5:
+            reward = - .04 * pow((self.sim.pose[2] - self.target_pos[2]), 2) + 1
 
-        # if 8 > abs(self.sim.pose[2] - self.target_pos[2]) >= 6:
-        #     reward += -80
+        # if self.target_pos[2]+3 >= self.sim.pose[2] >= self.target_pos[2]-3:
+        #     reward += 50
         #
-        # if abs(self.sim.pose[2] - self.target_pos[2]) >= 8:
-        #     reward += -150
-
-        if self.target_pos[2]+3 >= self.sim.pose[2] >= self.target_pos[2]-3:
-            reward += 100
-
-        if self.sim.pose[2] == self.target_pos[2]:
-            reward += 200.0
+        # if self.sim.pose[2] == self.target_pos[2]:
+        #     reward += 100.0
 
         return reward
 
@@ -59,9 +56,6 @@ class Task():
         if done:
             if self.sim.time < self.sim.runtime:
                 reward = -10
-            else:
-                if self.target_pos[2] + 3 < self.sim.pose[2] < self.target_pos[2] - 3:
-                    reward = -10
 
         return next_state, reward, done
 
