@@ -75,13 +75,12 @@ class Task():
         pose_all = []
         for _ in range(self.action_repeat):
             done = self.sim.next_timestep(rotor_speeds) # update the sim pose and velocities
-            # reward += self.get_reward(done)
-            reward += self.get_reward_w_done(done)
+            reward += self.get_reward()
             pose_all.append(self.sim.pose)
         next_state = np.concatenate(pose_all)
 
-        # if done and self.sim.time < self.sim.runtime:
-        #     reward -= 100
+        if done and self.sim.time < self.sim.runtime:
+            reward -= 100
 
         return next_state, reward, done
 
