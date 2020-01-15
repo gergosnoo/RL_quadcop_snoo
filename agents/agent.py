@@ -76,9 +76,9 @@ class Actor:
 
         # Try different layer sizes, activations, add batch normalization, regularizers, etc.
         # add l2 regularizer
-        net.add(layers.Dense(64, input_dim=64,
+        net = layers.Dense(64, input_dim=64,
                              kernel_regularizer=regularizers.l2(0.01),
-                             activity_regularizer=regularizers.l2(0.01)))
+                             activity_regularizer=regularizers.l2(0.01))(net)
 
 
         # Add final output layer with sigmoid activation
@@ -152,13 +152,13 @@ class Critic:
 
         # Try different layer sizes, activations, add batch normalization, regularizers, etc.
         # add l2 regularizer
-        net_states.add(layers.Dense(64, input_dim=64,
+        net_states = layers.Dense(64, input_dim=64,
                              kernel_regularizer=regularizers.l2(0.01),
-                             activity_regularizer=regularizers.l2(0.01)))
+                             activity_regularizer=regularizers.l2(0.01))(net_states)
         # add l2 regularizer
-        net_actions.add(layers.Dense(64, input_dim=64,
+        net_actions = layers.Dense(64, input_dim=64,
                              kernel_regularizer=regularizers.l2(0.01),
-                             activity_regularizer=regularizers.l2(0.01)))
+                             activity_regularizer=regularizers.l2(0.01))(net_actions)
 
 
         # Combine state and action pathways
