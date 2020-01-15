@@ -56,8 +56,12 @@ class Task():
             pose_all.append(self.sim.pose)
         next_state = np.concatenate(pose_all)
 
-        if done and self.sim.time < self.sim.runtime:
-            reward = -10
+        if done:
+            if self.sim.time < self.sim.runtime:
+                reward = -10
+            else:
+                if self.target_pos[2] + 3 < self.sim.pose[2] < self.target_pos[2] - 3:
+                    reward = -10
 
         return next_state, reward, done
 
