@@ -34,7 +34,7 @@ class ReplayBuffer:
         return len(self.memory)
 
 
-from keras import layers, models, optimizers
+from keras import layers, models, optimizers, regularizers
 from keras import backend as K
 
 
@@ -75,10 +75,15 @@ class Actor:
 
 
         # Try different layer sizes, activations, add batch normalization, regularizers, etc.
+        # add l2 regularizer
+        net.add(layers.Dense(64, input_dim=64,
+                             kernel_regularizer=regularizers.l2(0.01),
+                             activity_regularizer=regularizers.l2(0.01)))
+
 
         # Add final output layer with sigmoid activation
         raw_actions = layers.Dense(units=self.action_size,
-                                   activation='relu',
+                                   activation='sigmoid',
                                    name='raw_actions')(net) # had sigmoid activation
 
         # Scale [0, 1] output for each action dimension to proper range
@@ -88,6 +93,7 @@ class Actor:
 
         # Create Keras model
         self.model = models.Model(inputs=states, outputs=actions)
+
 
         # Define loss function using action value (Q value) gradients
         action_gradients = layers.Input(shape=(self.action_size,))
@@ -99,6 +105,9 @@ class Actor:
         optimizer = optimizers.Adam()
         updates_op = optimizer.get_updates(params=self.model.trainable_weights,
                                            loss=loss)
+        sgd = optimizers.SGD(lr=0.01, clipnorm=1.)
+        self.model.compile(optimizer=sgd, loss='mse')
+
         self.train_fn = K.function(
             inputs=[self.model.input, action_gradients, K.learning_phase()],
             outputs=[],
@@ -142,6 +151,15 @@ class Critic:
         # net_actions = optimizers.SGD(lr=0.01, clipvalue=1.)
 
         # Try different layer sizes, activations, add batch normalization, regularizers, etc.
+        # add l2 regularizer
+        net_states.add(layers.Dense(64, input_dim=64,
+                             kernel_regularizer=regularizers.l2(0.01),
+                             activity_regularizer=regularizers.l2(0.01)))
+        # add l2 regularizer
+        net_actions.add(layers.Dense(64, input_dim=64,
+                             kernel_regularizer=regularizers.l2(0.01),
+                             activity_regularizer=regularizers.l2(0.01)))
+
 
         # Combine state and action pathways
         net = layers.Add()([net_states, net_actions])
@@ -162,6 +180,8 @@ class Critic:
         # Define optimizer and compile model for training with built-in loss function
         optimizer = optimizers.Adam()
         self.model.compile(optimizer=optimizer, loss='mse')
+        sgd = optimizers.SGD(lr=0.01, clipnorm=1.)
+        self.model.compile(optimizer=sgd, loss='mse')
 
         # Compute action gradients (derivative of Q values w.r.t. to actions)
         action_gradients = K.gradients(Q_values, actions)
