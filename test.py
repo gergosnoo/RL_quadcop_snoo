@@ -1,6 +1,7 @@
-from keras import optimizers
-
-
-net = [100, -100]
-sgd = optimizers.SGD(lr=0.01, clipvalue=1.)
-print(net.get_gradients())
+import numpy as np
+a = np.array([10., 0., 0., 0.])
+b = np.array([10., 0., 0., 0.])
+print(np.all(a == b))
+if np.all(a == b):
+    print(np.array([0., 0., 0., 0.]))
+    print(a)

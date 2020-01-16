@@ -66,7 +66,7 @@ class Actor:
         states = layers.Input(shape=(self.state_size,), name='states')
 
         # Add hidden layers
-        net = layers.Dense(units=8, activation='relu')(states)
+        net = layers.Dense(units=16, activation='relu')(states)
         net = layers.BatchNormalization(axis=1)(net)
         net = layers.Dense(units=64, activation='relu')(net)
         net = layers.BatchNormalization(axis=1)(net)
@@ -102,8 +102,8 @@ class Actor:
         optimizer = optimizers.Adam(lr=0.0001)
         updates_op = optimizer.get_updates(params=self.model.trainable_weights,
                                            loss=loss)
-        sgd = optimizers.SGD(lr=0.01, clipnorm=1.)
-        self.model.compile(optimizer=sgd, loss='mse')
+        # sgd = optimizers.SGD(lr=0.001, clipnorm=1.)
+        # self.model.compile(optimizer=sgd, loss='mse')
 
         self.train_fn = K.function(
             inputs=[self.model.input, action_gradients, K.learning_phase()],
@@ -142,7 +142,7 @@ class Critic:
 
 
         # Add hidden layer(s) for action pathway
-        net_actions = layers.Dense(units=16, activation='relu')(actions)
+        net_actions = layers.Dense(units=8, activation='relu')(actions)
         net_actions = layers.BatchNormalization(axis=1)(net_actions)
         net_actions = layers.Dense(units=64, activation='relu')(net_actions)
         net_actions = layers.BatchNormalization(axis=1)(net_actions)
@@ -161,8 +161,6 @@ class Critic:
         # Combine state and action pathways
         net = layers.Add()([net_states, net_actions])
         net = layers.Activation('relu')(net)
-        # print(net.get_weights())
-        # net = optimizers.SGD(lr=0.01, clipvalue=1.)
 
         # Add more layers to the combined network if needed
         # net = layers.Dense(units=4, activation='sigmoid')(net)
@@ -177,8 +175,8 @@ class Critic:
         # Define optimizer and compile model for training with built-in loss function
         optimizer = optimizers.Adam(lr=0.0001)
         self.model.compile(optimizer=optimizer, loss='mse')
-        sgd = optimizers.SGD(lr=0.01, clipnorm=1.)
-        self.model.compile(optimizer=sgd, loss='mse')
+        # sgd = optimizers.SGD(lr=0.001, clipnorm=1.)
+        # self.model.compile(optimizer=sgd, loss='mse')
 
         # Compute action gradients (derivative of Q values w.r.t. to actions)
         action_gradients = K.gradients(Q_values, actions)
@@ -217,8 +215,8 @@ class DDPG():
 
         # Noise process
         self.exploration_mu = 0
-        self.exploration_theta = 0.17    # 0.15
-        self.exploration_sigma = 0.2    #0.2
+        self.exploration_theta = 0.15    # 0.15
+        self.exploration_sigma = 0.15    #0.2
         self.noise = OUNoise(self.action_size, self.exploration_mu,
                              self.exploration_theta, self.exploration_sigma)
 
