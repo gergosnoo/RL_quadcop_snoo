@@ -65,8 +65,11 @@ class Actor:
 
         # Add hidden layers
         net = layers.Dense(units=128, activation='relu')(states)
+        # net = layers.BatchNormalization()(net)
         net = layers.Dense(units=256, activation='relu')(net)
+        # net = layers.BatchNormalization()(net)
         net = layers.Dense(units=512, activation='relu')(net)
+        # net = layers.BatchNormalization()(net)
 
         # Try different layer sizes, activations, add batch normalization, regularizers, etc.
 
@@ -120,11 +123,16 @@ class Critic:
 
         # Add hidden layer(s) for state pathway
         net_states = layers.Dense(units=64, activation='relu')(states)
+        # net_states = layers.BatchNormalization()(net_states)
         net_states = layers.Dense(units=128, activation='relu')(net_states)
+        # net_states = layers.BatchNormalization()(net_states)
+
 
         # Add hidden layer(s) for action pathway
         net_actions = layers.Dense(units=64, activation='relu')(actions)
+        # net_actions = layers.BatchNormalization()(net_actions)
         net_actions = layers.Dense(units=128, activation='relu')(net_actions)
+        # net_actions = layers.BatchNormalization()(net_actions)
 
         # todo: Try different layer sizes, activations, add batch normalization, regularizers, etc.
 
@@ -182,8 +190,8 @@ class DDPG:
         self.noise = OUNoise(self.action_size, self.exploration_mu, self.exploration_theta, self.exploration_sigma)
 
         # Replay memory
-        self.buffer_size = 100000
-        self.batch_size = 32
+        self.buffer_size = 1000000
+        self.batch_size = 64
         self.memory = ReplayBuffer(self.buffer_size, self.batch_size)
 
         # Algorithm parameters
