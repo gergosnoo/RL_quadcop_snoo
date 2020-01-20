@@ -31,6 +31,7 @@ class Task:
         reward = 1 - 0.003 * (abs(self.sim.pose[:3] - self.target_pos)).sum()
         reward += 2 * self.sim.v[2]
         reward += 2 * self.sim.pose[2] + 0.2
+        reward *= (1 - .002 * (abs(self.sim.pose[0]) + abs(self.sim.pose[1])))
         return reward
 
     def step(self, rotor_speeds):
